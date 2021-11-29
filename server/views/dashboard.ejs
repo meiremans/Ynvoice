@@ -1,0 +1,127 @@
+<link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+
+
+<section>
+    <!--for demo wrap-->
+    <h1>ALL INVOICES</h1> <a href="/api/quotations">Quotations</a>
+    <div id = year style ="float: right">
+        <a href="/api/?year=<%=year-1%>"><</a>
+        <%= year%>
+        <a href="/api/?year=<%=Number(year)+1%>">></a>
+    </div>
+    <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+            <tr>
+                <th>Invoice Number</th>
+                <th>Company</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Dutch</th>
+                <th>English</th>
+                <th>Romanian</th>
+                <th>French</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tbl-content">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+            <%
+            var jan;
+            var feb;
+            var mar;
+            var apr;
+            var may;
+            var jun;
+            var jul;
+            var aug;
+            var sep;
+            var oct;
+            var nov;
+            var dec;
+            %>
+            <% invoices.forEach(function(invoice){ %>
+            <%if (invoice.month === 1 && !jan){%>
+            <tr><td id="month">January</td></tr>
+            <%  jan = true }%>
+            <%if (invoice.month === 2&& !feb){%>
+            <tr><td id="month">February</td></tr>
+            <%  feb = true }%>
+            <%if (invoice.month === 3&& !mar){%>
+            <tr><td id="month">March</td></tr>
+            <%  mar = true }%>
+            <%if (invoice.month === 4&& !apr){%>
+            <tr><td id="month">April</td></tr>
+            <%  apr = true }%>
+            <%if (invoice.month === 5&& !may){%>
+            <tr><td id="month">May</td></tr>
+            <%  may = true }%>
+            <%if (invoice.month === 6&& !jun){%>
+            <tr><td id="month">June</td></tr>
+            <%  jun = true }%>
+            <%if (invoice.month === 7&& !jul){%>
+            <tr><td id="month">July</td></tr>
+            <%  jul = true }%>
+            <%if (invoice.month === 8&& !aug){%>
+            <tr><td id="month">August</td></tr>
+            <%  aug = true }%>
+            <%if (invoice.month === 9&& !sep){%>
+            <tr><td id="month">September</td></tr>
+            <%  sep = true }%>
+            <%if (invoice.month === 10&& !oct){%>
+            <tr><td id="month">October</td></tr>
+            <%  oct = true }%>
+            <%if (invoice.month === 11&& !nov){%>
+            <tr><td id="month">November</td></tr>
+            <%  nov = true }%>
+            <%if (invoice.month === 12&& !dec){%>
+            <tr>
+                <td id="month">December</td></tr>
+            <%  dec = true }%>
+            <tr>
+                <td><%= invoice.invoiceNumber %></td>
+                <td><%= invoice.client.name %> </td>
+                <td><%= invoice.date.toISOString().substring(0, 10) %> </td>
+                <td>
+                    <%= invoice.total %> EURO
+                </td>
+                <td>
+                    <div>
+                        <a href="/api/invoice/<%= invoice.invoiceNumber %>">View</a>
+                        <a href="/api/invoice/<%= invoice.invoiceNumber %>/edit">Edit</a>
+                        <a href="/api/invoice/<%= invoice.invoiceNumber %>/download?lang=nl">Download</a>
+                    </div>
+                </td>
+                <td>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>?lang=en">View</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/edit?lang=en">Edit</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/download?lang=en">Download</a>
+                </td>
+                <td>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>?lang=ro">View</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/edit?lang=ro">Edit</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/download?lang=ro">Download</a>
+                </td>
+                <td>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>?lang=fr">View</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/edit?lang=fr">Edit</a>
+                    <a href="/api/invoice/<%= invoice.invoiceNumber %>/download?lang=fr">Download</a>
+                </td>
+            </tr>
+            <% }) %>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<a href="/api/invoice/new" style = "float: right;margin-right: 50px;">create new invoice</a>
+
+
+<div class="made-with-love" style = "margin-left: 12%;">
+    Made with
+    <i>♥</i> by
+    <a target="_blank" href="http://www.ab-it.io">AB-IT</a>
+</div>

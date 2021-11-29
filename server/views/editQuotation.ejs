@@ -1,0 +1,138 @@
+<link rel="stylesheet" media="all" type="text/css" href="/css/invoice.css" />
+<link rel="stylesheet" media="all" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+<style>html {
+        zoom: 0.60; /* use 0.8 on windows systems, bug in phantomjs that zoom levels are different*/
+    }</style>
+<form id="editQuotation" action="/api/quotation/<%=quotation.quotationNumber %> " method="post">
+<div class="container invoice">
+    <div class="invoice-header">
+        <div class="row">
+            <div class="col-xs-8">
+                <h1>Offerte</h1>
+                <h4 class="text-muted">  Offerte Nummer : <%= quotation.quotationNumber %> |  Datum:  <%= quotation.date.toISOString().substring(0, 10) %></h4>
+            </div>
+            <div class="col-xs-4">
+                <div class="media">
+                    <div class="media-left">
+
+                    </div>
+                    <ul class="media-body list-unstyled">
+                        <div style="float:right">
+                            <img class="media-object" src="<%=process.env.LOGO_URL%>" />
+                            <li><%=process.env.TAGLINE%></li>
+                            <li><%=process.env.EMAIL%></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="invoice-body">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Naam</dt>
+                            <dd><strong><%= quotation.company.name %></strong></dd>
+                            <dt>Address</dt>
+                            <dd> <%= quotation.company.adress.street2 %></dd>
+                            <dd>    <%= quotation.company.adress.county %></dd>
+                            <dd>    <%= quotation.company.adress.country %></dd>
+                            <dt> BTW nummer</dt>
+                            <dd class="mono"><%= quotation.company.vatNumber %></dd>
+                            <dt>Registratie Nummer</dt>
+                            <dd> <%= quotation.company.registrationNumber %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Klant gegevens</h3>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Naam</dt>
+                            <dd><%= quotation.client.name %></dd>
+                            <dt> Adress</dt>
+                            <dd><%= quotation.client.adress.street %></dd>
+                            <dt>BTW nummer</dt>
+                            <dd class="mono"><%= quotation.client.vatNumber %></dd>
+                            <dt>&nbsp;</dt>
+                            <dd>&nbsp;</dd>
+                            </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Omschrijving</th>
+                    <th class="text-center colfix">Prijs</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% invoiceLines.forEach(function(line){ %>
+                <tr>
+                    <td>
+                        <%= line.code %>
+                        <br>
+                        <small class="text-muted"><input type="text" name="<%= line._id%>" value = "<%= line.extraInfo %>" style = "width: 100%;">  </small>
+                    </td>
+                    <td class="text-right">
+                        <span class="mono"><%= line.amount%></span>
+                        <br>
+                        <small class="text-muted">Euro</small>
+                    </td>
+                </tr>
+                <% })%>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <td class="text-center col-xs-1">subtotaal</td>
+                    <td class="text-center col-xs-1">BTW</td>
+                    <td class="text-center col-xs-1">totaal</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="text-center rowtotal mono"><%= quotation.total%> EUR </th>
+                    <th class="text-center rowtotal mono">0*</th>
+                    <th class="text-center rowtotal mono"><%= quotation.total%> EUR </th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i>Comments / Notes</i>
+                        <p>Deze offerte is 21 dagen geldig</p>
+                        <p>*Alle offertes zijn exclusief BTW, Belgische bedrijven zijn vrijgesteld van BTW wegens intracommunautaire regeling</p>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i>Algemene Voorwaarden</i>
+                        <p>Bij het akkoord gaan van deze offerte, gaat men akkoord met de algemene voorwaarden te vinden op onze site: www.ab-it.io/algemene-voorwaarden</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input name ="language" type="hidden" value="<%=language%>">
+        <input type="submit" value="OK" style ="float: right;" >
+    </div>
+</div>
+</form>

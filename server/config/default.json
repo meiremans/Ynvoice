@@ -1,0 +1,12 @@
+{
+  "port": 8569,
+  "mongo": {
+    "server": "localhost",
+    "port": 27017,
+    "database": "ynvoice"
+  },
+  "jwt": {
+    "expiresIn": 36000,
+    "JWT_SECRET" : "test"
+  }
+}

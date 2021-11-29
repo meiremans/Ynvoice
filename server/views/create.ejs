@@ -1,0 +1,144 @@
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<form id="newInvoice" action="/api/invoice/create " method="post">
+    <link rel="stylesheet" type="text/css" href="/css/invoice.css"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( "#datepicker" ).datepicker();
+        } );
+    </script>
+    <div class="container invoice">
+        <div class="invoice-header">
+            <div class="row">
+                Create new invoice
+            </div>
+        </div>
+        <div class="invoice-body">
+            <p>Date: <input type="text" name="date" id="datepicker" value="<%= JSON.stringify(new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate()) %>"></p>
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                <dt>Company</dt>
+                                <select class="selectpicker" data-style="btn-info" name="selectpicker"
+                                        onchange="populateClient(this)">
+                                    <optgroup label="Select Table">
+                                        <option value="">Select Company</option>
+                                        <%
+                                        clients.forEach(function(client){ %>
+                                            <option value="<%= JSON.stringify(client) %>"><%= client.name %></option>
+                                        <% }) %>
+                                    </optgroup>
+                                </select>
+                                <span class="client">
+                                    <label>Name<input name="clientName" type="text" class="text" value=""/></label>
+                                    <label>VAT <input name="clientVatNumber" type="text" class="text" value=""/></label>
+                                    <label>Country <input name="clientAdressCountry" type="text" class="text" value=""/></label>
+                                    <label>County <input name="clientAdressCounty" type="text" class="text"
+                                                         value=""/></label>
+                                    <label>Postal Code <input name="clientAdressPostalCode" type="text" class="text"
+                                                         value=""/></label>
+                                    <label>Address <input name="clientAdressStreet" type="text" class="text" value=""/></label>
+                                </span>
+                                <span id="lines">
+                                <div id="line1" data-row-id="1">
+                                    <select id="1" class="selectpicker" data-style="btn-info" name="selectpicker"
+                                            onchange="populateLine(this)">
+                                    <optgroup label="Select Table">
+                                        <option value="">Select Work</option>
+                                        <%
+                                        codes.forEach((code) =>{ %>
+                                            <option value="<%= JSON.stringify(code.code) %>"><%= code.en %></option>
+                                        <% }) %>
+                                    </optgroup>
+                                    </select>
+                                   <label>  Code <input id="lineCode1" name="lineCode" type="text" class="text" value=""/></label>
+                                   <label> Amount(€) <input id="lineAmount1" name="lineAmount" type="text" class="text"
+                                                            value=""/></label>
+                                   <label> Extra Info <input id="lineExtraInfo1" name="lineExtraInfo" type="text" class="text"
+                                                             value=""/></label>
+                                </div>
+                                </span>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <label> VAT percentage <input id="vatPercentage" name="vatPercentage" type="text" class="text"
+                                          value="0"/></label>
+                <button type="button" style="float: right;" onclick="addLine()">add line</button>
+                <input type="submit" value="OK" style="float: right;">
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    let amountOfLines = 1
+
+    function addLine() {
+        var line = document.getElementById(`line${amountOfLines}`);
+        var clone = line.cloneNode(true);
+        $(clone).find("input:text").val("").end()
+        renameCloneIdsAndNames($(clone))
+        document.getElementById("lines").appendChild(clone)
+
+        amountOfLines++;
+    }
+
+    function populateClient(sel) {
+        var form = sel.form,
+            value = JSON.parse(sel.options[sel.selectedIndex].value);
+        form.clientName.value = value.name;
+        form.clientVatNumber.value = value._id;
+        form.clientAdressCountry.value = value.adress.country;
+        form.clientAdressCounty.value = value.adress.county;
+        form.clientAdressStreet.value = value.adress.street;
+    }
+
+    function populateLine(sel) {
+        var form = sel.form;
+        let id = $(sel).attr("id");
+        console.log(id)
+        form[`lineCode${id}`].value = JSON.parse(sel.options[sel.selectedIndex].value);
+    }
+
+    function renameCloneIdsAndNames(objClone) {
+
+        if (!objClone.attr('data-row-id')) {
+            console.error('Cloned object must have \'data-row-id\' attribute.');
+        }
+
+        if (objClone.attr('id')) {
+            objClone.attr('id', objClone.attr('id').replace(/\d+$/, function (strId) {
+                return parseInt(strId) + 1;
+            }));
+        }
+
+        objClone.attr('data-row-id', objClone.attr('data-row-id').replace(/\d+$/, function (strId) {
+            return parseInt(strId) + 1;
+        }));
+
+        objClone.find('[id]').each(function () {
+
+            var strNewId = $(this).attr('id').replace(/\d+$/, function (strId) {
+                return parseInt(strId) + 1;
+            });
+
+            $(this).attr('id', strNewId);
+
+            if ($(this).attr('name')) {
+                var strNewName = $(this).attr('name').replace(/\[\d+\]/g, function (strName) {
+                    strName = strName.replace(/[\[\]']+/g, '');
+                    var intNumber = parseInt(strName) + 1;
+                    return '[' + intNumber + ']'
+                });
+                $(this).attr('name', strNewName);
+            }
+        });
+
+        return objClone;
+    }
+</script>

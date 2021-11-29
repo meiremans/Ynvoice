@@ -1,0 +1,142 @@
+<form id="addCodes" action="/api/invoice/<%=invoice.invoiceNumber %> " method="post">
+<link rel="stylesheet" type="text/css" href="/css/invoice.css" />
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+<div class="container invoice">
+    <div class="invoice-header">
+        <div class="row">
+            <div class="col-xs-8">
+                <h1><%=text.invoice%></h1>
+                <h4 class="text-muted">  <%= text.invoiceNr %> : <%= invoice.invoiceNumber %> |  <%= text.date %>:  <%= invoice.date %></h4>
+            </div>
+            <div class="col-xs-4">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="<%=process.env.LOGO_URL%>" />                    </div>
+                    <ul class="media-body list-unstyled">
+                        <li><strong><%= invoice.company.name %></strong></li>
+                        <li><%=process.env.TAGLINE%></li>
+                        <li><%=process.env.EMAIL%></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="invoice-body">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Name</dt>
+                            <dd><strong><%= invoice.company.name %></strong></dd>
+                            <dt>Address</dt>
+                            <dd> <%= invoice.company.adress.street2 %></dd>
+                            <dd>    <%= invoice.company.adress.county %></dd>
+                            <dd>    <%= invoice.company.adress.country %></dd>
+                            <dt> <%= text.vatCode %></dt>
+                            <dd class="mono"><%= invoice.company.vatNumber %></dd>
+                            <dt>Registration Number</dt>
+                            <dd> <%= invoice.company.registrationNumber %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><%=text.invoiceAddress%></h3>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Name</dt>
+                            <dd><%= invoice.client.name %></dd>
+                            <dt> <%= text.invoiceAddress %></dt>
+                            <dd><%= invoice.client.adress.street %></dd>
+                            <dt><%= text.vatCode %></dt>
+                            <dd class="mono"><%= invoice.client.vatNumber %></dd>
+                            <dt>&nbsp;</dt>
+                            <dd>&nbsp;</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th><%= text.description%></th>
+                    <th class="text-center colfix"><%= text.cost%></th>
+                    <th class="text-center colfix"><%= text.cost%> RON*</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% invoiceLines.forEach(function(line){ %>
+                <tr>
+                    <td>
+                        <%= line.code %>
+                        <br>
+                        <small class="text-muted"><input type="text" name="<%= line._id%>" value = "<%= line.extraInfo %>" style = "width: 100%;">  </small>
+                    </td>
+                    <td class="text-right">
+                        <span class="mono"><%= line.amount%></span>
+                        <br>
+                        <small class="text-muted">Euro</small>
+                    </td>
+                    <td class="text-right">
+                        <span class="mono"><%= Math.round(line.amount * invoice.exchangeRate * 100) / 100%></span>
+                        <br>
+                        <small class="text-muted">RON*</small>
+                    </td>
+                </tr>
+                <% })%>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <td class="text-center col-xs-1"><%=text.subtotal%></td>
+                    <td class="text-center col-xs-1"><%=text.vat%></td>
+                    <td class="text-center col-xs-1"><%=text.total%></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="text-center rowtotal mono"><%= invoice.total%> EUR / <%= Math.round(invoice.total * invoice.exchangeRate * 100) / 100%> RON*</th>
+                    <th class="text-center rowtotal mono">0**</th>
+                    <th class="text-center rowtotal mono"><%= invoice.total%> EUR / <%= Math.round(invoice.total * invoice.exchangeRate * 100) / 100%> RON*</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i>Comments / Notes</i>
+                        <hr style="margin:3px 0 5px" />*<%= text.exchangeRate%>: <%=invoice.exchangeRate%>
+                        <hr style="margin:3px 0 5px" />**<%= text.notTaxable%>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p><%= text.transferAmount%></p>
+                        <ul class="list-unstyled">
+                            <li><b><%=process.env.BANK%></b> </li>
+                            <li><i>BICC : <%=process.env.BICC%></i></li>
+                            <li>EURO : <span class="mono"><%=process.env.BANK_ACCOUNT_EURO%></span></li>
+                            <li>RON  : <span class="mono"> <%=process.env.BANK_ACCOUNT_RON%></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input name ="language" type="hidden" value="<%=language%>">
+        <input type="submit" value="OK" style ="float: right;" >
+    </div>
+</div>
+</form>

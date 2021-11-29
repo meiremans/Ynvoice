@@ -1,0 +1,13 @@
+version: "2"
+services:
+    ynvoice:
+      container_name: ynvoice
+      build: .
+      restart: always
+      expose:
+        - 2000
+
+networks:
+  default:
+    external:
+      name: nginx-proxy-manager_default

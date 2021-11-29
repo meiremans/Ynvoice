@@ -1,0 +1,12 @@
+<form id="addCodes" action="/api/codes" method="post">
+    <p>new code</p>
+    <% codes.forEach(function(code){ %>
+    <p><%= code %></p>
+   NL  <input type="text" name="<%= code %>_nl"  />
+   EN  <input type="text" name="<%= code  %>_en"  />
+   RO  <input type="text" name="<%= code  %>_ro"  />
+   FR  <input type="text" name="<%= code  %>_fr"  />
+    <% }) %>
+    <input type="hidden" name="codes" value = <%=codes%>/>
+    <input type="submit" value="OK">
+</form>

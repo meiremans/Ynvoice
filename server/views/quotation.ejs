@@ -1,0 +1,147 @@
+<link rel="stylesheet" media="all" type="text/css" href="/css/invoice.css" />
+<link rel="stylesheet" media="all" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+<style>html {
+        zoom: 0.60; /* use 0.8 on windows systems, bug in phantomjs that zoom levels are different*/
+    }</style>
+<div class="container invoice">
+    <div class="invoice-header">
+        <div class="row">
+            <div class="col-xs-8">
+                <h1><%=text.quotation%></h1>
+                <h4 class="text-muted">  <%= text.quotationNumber %>  : <%= quotation.quotationNumber %> |  <%= text.date %> :  <%= quotation.date.toISOString().substring(0, 10) %></h4>
+            </div>
+            <div class="col-xs-4">
+                <div class="media">
+                    <div class="media-left">
+
+                    </div>
+                    <ul class="media-body list-unstyled">
+                        <div style="float:right">
+                            <img class="media-object" src="<%=process.env.LOGO_URL%>" />
+                            <li><%=process.env.TAGLINE%></li>
+                            <li><%=process.env.EMAIL%></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="invoice-body">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt><%=text.name %></dt>
+                            <dd><strong><%= quotation.company.name %></strong></dd>
+                            <dt><%= text.address%></dt>
+                            <dd> <%= quotation.company.adress.street2 %></dd>
+                            <dd>    <%= quotation.company.adress.county %></dd>
+                            <dd>    <%= quotation.company.adress.country %></dd>
+                            <dt> <%= text.vatCode %></dt>
+                            <dd class="mono"><%= quotation.company.vatNumber %></dd>
+                            <dt><%= text.registrationNumber %></dt>
+                            <dd> <%= quotation.company.registrationNumber %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><%=text.invoiceAddress%></h3>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt><%= text.name %></dt>
+                            <dd><%= quotation.client.name %></dd>
+                            <dt><%= text.address%></dt>
+                            <dd><%= quotation.client.adress.street %></dd>
+                            <dd><%= quotation.client.adress.street2 %></dd>
+                            <dd><%= quotation.client.adress.city %> </dd>
+                            <dd><%= quotation.client.adress.country %> </dd>
+                            <dt><%= text.vatCode %></dt>
+                            <dd class="mono"><%= quotation.client.vatNumber %></dd>
+                            <dt>&nbsp;</dt>
+                            <dd>&nbsp;</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th><%= text.description%></th>
+                    <th><%= text.amount%></th>
+                    <th><%= text.unitPrice%></th>
+                    <th class="text-center colfix"><%= text.cost%></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% invoiceLines.forEach(function(line){ %>
+                <tr>
+                    <td>
+                        <%= line.code %>
+                        <br>
+                        <small class="text-muted"><%= line.extraInfo %></small>
+                    </td>
+                    <td>
+                       <%= line.units %>
+                    </td>
+                    <td>
+                        <span class="mono"><%= line.unitPrice %></span>
+                        <br>
+                        <small class="text-muted">Euro</small>
+                    </td>
+                    <td class="text-right">
+                        <span class="mono"><%= line.amount%></span>
+                        <br>
+                        <small class="text-muted">Euro</small>
+                    </td>
+                </tr>
+                <% })%>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel panel-default">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <td class="text-center col-xs-1"><%=text.subtotal%></td>
+                    <td class="text-center col-xs-1"><%=text.vat%></td>
+                    <td class="text-center col-xs-1"><%=text.total%></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="text-center rowtotal mono"><%= quotation.total%> EUR </th>
+                    <th class="text-center rowtotal mono">0*</th>
+                    <th class="text-center rowtotal mono"><%= quotation.total%> EUR </th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i><%= text.comments%></i>
+                        <%-text.quotationComments%>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i><%=text.termsOfService%></i>
+                        <%-text.quotationTOS%>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

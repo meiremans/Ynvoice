@@ -1,0 +1,32 @@
+version: '3'
+services:
+  ynvoice-dev:
+    image: node:16
+    volumes:
+      - .:/usr/src/service
+    working_dir: /usr/src/service/
+    environment:
+      - NODE_ENV=development
+      - MONGO_CONNECTION_STRING=mongodb://mongodb/
+      - JWT_SECRET=DEV
+    command: npm run debug
+    restart: always
+    ports:
+        - "2000:2000"
+        - "9229:9229"
+    links:
+        - mongodb
+    depends_on:
+          - mongodb
+
+  mongodb:
+          image: mongo:latest
+          container_name: "mongodb"
+          environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/dev/null
+          volumes:
+            - ./data/db:/data/db
+          ports:
+            - 27017:27017
+          command: mongod --logpath=/dev/null # --quiet
